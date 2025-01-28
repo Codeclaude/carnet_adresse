@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include"fonction.h"
   const int TAILLE_INITIALE = 100;
 
@@ -25,13 +26,22 @@ int main(){
                  case 4:
                 supprimercontact(contacts, taille);
                break;
-            case 5:
-                std::cout << "Au revoir !" << std::endl;
+                case 5:
+                   modifiercontact(contacts, taille);
+                break;
+            case 6:
+                sauvegarderfichier(contacts, taille);
+                break;
+                case 7:
+                 chargerfichier(contacts, taille, capacite);
+               break;
+                case 8:
+                  std::cout << "Au revoir !" << std::endl;
                 break;
             default:
                 std::cout << "Option invalide. Veuillez reessayer une autre option." << std::endl;
         }
-    } while (choix != 5);
+    } while (choix != 8);
 
     return 0;
 }

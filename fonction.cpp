@@ -1,5 +1,7 @@
 #include<iostream>
-#include <cstring>
+#include<cstring>
+#include <fstream>
+#include<string>
 #include"fonction.h"
 
 
@@ -9,13 +11,14 @@ void affichercontact(const Contact& contact) {
 void afficherlescontacts(Contact contacts[], int taille) {
     if (taille == 0) {
        std::cout << "aucun contact disponible." << std::endl;
-    }else{
+       return ;
+    }
 std::cout << "liste des contacts :" << std::endl;
     for (int i = 0; i < taille; i++) {
         std::cout << i + 1 << ". ";
         affichercontact(contacts[i]);
     }
-    }
+    
     
 }
 void affichermenu() {
@@ -24,39 +27,45 @@ void affichermenu() {
     std::cout << "2. ajouter un contact" << std::endl;
     std::cout << "3.rechercher un contact" << std::endl;
     std::cout << "4. supprimer un contact" << std::endl;
-    std::cout << "5.quitter" << std::endl;
+      std::cout << "5.modifier un contact" << std::endl;
+      std::cout << "6. sauvegarder contact" << std::endl;
+      std::cout << "7.charger les contact" << std::endl;
+    std::cout << "8.quitter" << std::endl;
     
     std::cout << "choisissez une option : ";
 }
 void ajoutercontact(Contact contacts[], int& taille, int capacite) {
     if (taille >= capacite) {
         std::cout << "le carnet est plein, impossible d ajouter un nouveau contact." << std::endl;
-    }else{
+    return ;
+    }
  Contact nouveau;
     std::cout << "Entrer le nom : ";
     std::cin >> nouveau.nom;
     std::cout << "Entrer le prenom : ";
     std::cin >> nouveau.prenom;
     std::cout << "Entrer l'email : ";
-    std::cin >> nouveau.email;
+    std::cin.getline(nouveau.email,50);
     std::cout << "Entrer le telephone : ";
     std::cin >> nouveau.telephone;
     
     for (int i = 0; i < taille; i++) {
         if (strcmp(contacts[i].nom, nouveau.nom) == 0 && strcmp(contacts[i].email, nouveau.email) == 0) {
            std::cout << "Erreur : Un contact avec le meme nom et email existe deja." << std::endl;
+        return;
         }
      }
 contacts[taille] = nouveau;
     taille++;
     std::cout << "Contact ajoute avec succes !" << std::endl;
-    }
+    
 }
 
 void recherchercontact(Contact contacts[], int taille) {
     if (taille == 0) {
         std::cout << "aucun contact disponible" << std::endl;
-    }else{
+        return;
+    }
         char recherche[20];
     std::cout << "Entrer le nom ou l'email a rechercher : ";
     std::cin >> recherche;
@@ -73,7 +82,7 @@ void recherchercontact(Contact contacts[], int taille) {
         std::cout << "aucun contact correspondant trouve" << std::endl;
     
 }
- }
+ 
 
     
 
@@ -82,9 +91,9 @@ void recherchercontact(Contact contacts[], int taille) {
 void supprimercontact(Contact contacts[], int& taille) {
     if (taille == 0) {
         std::cout << "aucun contact disponible a supprimer" << std::endl;
-        
+        return;
     }
-else{
+
      char nomsupprimer[20];
     std::cout << "Entrer le nom du contact a supprimer : ";
     std::cin >> nomsupprimer;
@@ -105,6 +114,65 @@ else{
     if (!trouve) {
         std::cout << "aucun contact trouve avec ce nom" << std::endl;
     }
-}
+
    
 }
+void modifiercontact(Contact contacts[], int taille) {
+    if (taille == 0) {
+       std::cout << "Aucun contact disponible a modifier." << std::endl;
+        return;
+    }
+
+    char modifier[20];
+    std::cout << "Entrer le nom du contact a modifier : ";
+    std::cin >> modifier;
+
+    for (int i = 0; i < taille; i++) {
+        if (strcmp(contacts[i].nom, modifier) == 0) {
+              std::cout << "Entrer le nouveau nom : ";
+            std::cin >> contacts[i].nom;
+            std::cout << "Entrer le nouveau prenom : ";
+            std::cin >> contacts[i].prenom;
+            std::cout << "Entrer le nouveau email : ";
+            std::cin.getline(contacts[i].email,50);
+            std::cout << "Entrer le nouveau telephone : ";
+            std::cin >> contacts[i].telephone;
+            std::cout << "Contact modifier avec succes !" << std::endl;
+            return;
+        }
+    }
+
+    std::cout << "Aucun contact trouve avec ce nom." << std::endl;
+}
+void sauvegarderfichier(Contact contacts[], int taille) {
+    std::ofstream fichier("contacts.txt");
+    if (!fichier) {
+        std::cout << "Erreur lors de louverture du fichier " << std::endl;
+        return;
+    }
+
+    for (int i = 0; i < taille; i++) {
+        fichier << contacts[i].nom << " "<< contacts[i].prenom << " "<< contacts[i].email << " "<< contacts[i].telephone << std::endl;
+    }
+    fichier.close();
+    std::cout << "Contacts sauvegardes avec succes " << std::endl;
+}
+void chargerfichier(Contact contacts[], int& taille, int capacite) {
+    std::ifstream fichier("contacts.txt");
+    if (!fichier) {
+        std::cout << "Erreur lors de l'ouverture du fichier pour le chargement." << std::endl;
+        return;
+    }
+
+    taille = 0; 
+    while (fichier >> contacts[taille].nom >> contacts[taille].prenom >> contacts[taille].email >> contacts[taille].telephone) {
+        taille++;
+        if (taille >= capacite) {
+            std::cout << "Capacite maximale atteinte lors du chargement des contacts." << std::endl;
+            break;
+        }
+    }
+    fichier.close();
+    std::cout << "Contacts charges avec succes !" << std::endl;
+}
+
