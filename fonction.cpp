@@ -45,12 +45,13 @@ void ajoutercontact(Contact contacts[], int& taille, int capacite) {
     std::cout << "Entrer le prenom : ";
     std::cin >> nouveau.prenom;
     std::cout << "Entrer l'email : ";
-    std::cin.getline(nouveau.email,50);
+    std::cin.ignore();
+    std::getline(std::cin,nouveau.email);
     std::cout << "Entrer le telephone : ";
     std::cin >> nouveau.telephone;
     
     for (int i = 0; i < taille; i++) {
-        if (strcmp(contacts[i].nom, nouveau.nom) == 0 && strcmp(contacts[i].email, nouveau.email) == 0) {
+        if (strcmp(contacts[i].nom, nouveau.nom) == 0 && contacts[i].email.compare(nouveau.email) == 0) {
            std::cout << "Erreur : Un contact avec le meme nom et email existe deja." << std::endl;
         return;
         }
@@ -72,7 +73,7 @@ void recherchercontact(Contact contacts[], int taille) {
 
     bool trouve = false;
     for (int i = 0; i < taille; i++) {
-        if (strcmp(contacts[i].nom, recherche) == 0 || strcmp(contacts[i].email, recherche) == 0) {
+        if (strcmp(contacts[i].nom, recherche) == 0 || contacts[i].email.compare(recherche) == 0) {
             affichercontact(contacts[i]);
             trouve = true;
         }
@@ -134,7 +135,7 @@ void modifiercontact(Contact contacts[], int taille) {
             std::cout << "Entrer le nouveau prenom : ";
             std::cin >> contacts[i].prenom;
             std::cout << "Entrer le nouveau email : ";
-            std::cin.getline(contacts[i].email,50);
+            std::getline(std::cin,contacts[i].email);
             std::cout << "Entrer le nouveau telephone : ";
             std::cin >> contacts[i].telephone;
             std::cout << "Contact modifier avec succes !" << std::endl;

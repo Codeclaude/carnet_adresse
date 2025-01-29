@@ -1,9 +1,10 @@
 #ifndef FONCTION_H
 #define FONCTION_H
+#include<string>
 struct Contact {
     char nom[20];
     char prenom[20];
-    char email[50];
+    std::string email;
     char telephone[9];
 };
 void affichercontact(const Contact& contact);
