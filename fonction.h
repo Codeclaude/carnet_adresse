@@ -7,6 +7,7 @@ struct Contact {
     std::string email;
     char telephone[9];
 };
+// prototypes des fonctions
 void affichercontact(const Contact& contact);
 void afficherlescontacts(Contact contacts[], int taille);
 void ajoutercontact(Contact contacts[], int& taille, int capacite);

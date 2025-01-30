@@ -1,19 +1,22 @@
 #include<iostream>
-#include<cstring>
-#include <fstream>
-#include<string>
-#include"fonction.h"
+#include<cstring>//pour utiliserstrcmp
+#include <fstream>//pour la mainipulation des fichiers
+#include<string>//pour utiliser getline et std::string
+#include"fonction.h"//pour les prototypes de nos fonctions
 
-
+// fonction pour afficher un contact
 void affichercontact(const Contact& contact) {
    std::cout<< "Nom: " << contact.nom  << ", Prenom: " << contact.prenom  << ", Email: " << contact.email << ", Telephone: " << contact.telephone  << std::endl;
 }
+
+// fonction pour afficher la liste des contacts
 void afficherlescontacts(Contact contacts[], int taille) {
     if (taille == 0) {
        std::cout << "aucun contact disponible." << std::endl;
        return ;
     }
 std::cout << "liste des contacts :" << std::endl;
+// parcours et affichage de chaque contact
     for (int i = 0; i < taille; i++) {
         std::cout << i + 1 << ". ";
         affichercontact(contacts[i]);
@@ -21,19 +24,34 @@ std::cout << "liste des contacts :" << std::endl;
     
     
 }
+// fonction pour afficher le menu de navigation
 void affichermenu() {
-    std::cout << "\nMENU PRINCIPAL :" << std::endl;
-    std::cout << "1. afficher tous les contacts" << std::endl;
-    std::cout << "2. ajouter un contact" << std::endl;
-    std::cout << "3.rechercher un contact" << std::endl;
-    std::cout << "4. supprimer un contact" << std::endl;
-      std::cout << "5.modifier un contact" << std::endl;
-      std::cout << "6. sauvegarder contact" << std::endl;
-      std::cout << "7.charger les contact" << std::endl;
-    std::cout << "8.quitter" << std::endl;
+    std::cout << R"(
+
+===============================================================================================================
+     __  __  ______  _   _  _    _   _____   _____   _____  _   _   _____  _____  _____          _           
+ |  \/  ||  ____|| \ | || |  | | |  __ \ |  __ \ |_   _|| \ | | / ____||_   _||  __ \  /\    | |       _  
+ | \  / || |__   |  \| || |  | | | |__) || |__) |  | |  |  \| || |       | |  | |__) |/  \   | |      (_) 
+ | |\/| ||  __|  | . ` || |  | | |  ___/ |  _  /   | |  | . ` || |       | |  |  ___// /\ \  | |          
+ | |  | || |____ | |\  || |__| | | |     | | \ \  _| |_ | |\  || |____  _| |_ | |   / ____ \ | |____   _  
+ |_|  |_||______||_| \_| \____/  |_|     |_|  \_\|_____||_| \_| \_____||_____||_|  /_/    \_\|______| (_) 
+
+===============================================================================================================
     
-    std::cout << "choisissez une option : ";
+                   ----------------------1. AFFICHER TOUS LES CONTACTS----------------
+                      ------------------------2. AJOUTER UN CONTACT-----------------
+                        --------------------3.RECHERCHER UN CONTACT---------------
+                         ------------------4. SUPPRIMMER UN CONTACT-------------
+                           ----------------5. MODIFIER UN CONTACT-------------
+                             --------------6. SAUVEGARDER CONTACT(S)-------
+                               ------------7. CHARGER CONTACT(S)---------
+                                  ---------------8. QUITTER------------
+     )";                          
+  std::cout<<"        CHOISISSEZ UNE OPTION:" ; 
+                     
 }
+
+// fonction pour ajouter un contact
 void ajoutercontact(Contact contacts[], int& taille, int capacite) {
     if (taille >= capacite) {
         std::cout << "le carnet est plein, impossible d ajouter un nouveau contact." << std::endl;
@@ -61,7 +79,7 @@ contacts[taille] = nouveau;
     std::cout << "Contact ajoute avec succes !" << std::endl;
     
 }
-
+// fonction pour rechercher un contact parmi la liste des contacts
 void recherchercontact(Contact contacts[], int taille) {
     if (taille == 0) {
         std::cout << "aucun contact disponible" << std::endl;
@@ -72,6 +90,7 @@ void recherchercontact(Contact contacts[], int taille) {
     std::cin >> recherche;
 
     bool trouve = false;
+    // comparaison de l element rechercher au nom ou mail de chaque contact
     for (int i = 0; i < taille; i++) {
         if (strcmp(contacts[i].nom, recherche) == 0 || contacts[i].email.compare(recherche) == 0) {
             affichercontact(contacts[i]);
@@ -89,6 +108,8 @@ void recherchercontact(Contact contacts[], int taille) {
 
     
 }
+
+// fonction pour supprimer un contact de la liste de contacts
 void supprimercontact(Contact contacts[], int& taille) {
     if (taille == 0) {
         std::cout << "aucun contact disponible a supprimer" << std::endl;
@@ -100,6 +121,7 @@ void supprimercontact(Contact contacts[], int& taille) {
     std::cin >> nomsupprimer;
 
     bool trouve = false;
+    // deplacement des indices et reduction de la taille du tableau si le nom du contact y est
     for (int i = 0; i < taille; i++) {
         if (strcmp(contacts[i].nom, nomsupprimer) == 0) {
             for (int j = i; j < taille - 1; j++) {
@@ -118,6 +140,8 @@ void supprimercontact(Contact contacts[], int& taille) {
 
    
 }
+
+// fonction pour modifier un contact 
 void modifiercontact(Contact contacts[], int taille) {
     if (taille == 0) {
        std::cout << "Aucun contact disponible a modifier." << std::endl;
@@ -135,6 +159,7 @@ void modifiercontact(Contact contacts[], int taille) {
             std::cout << "Entrer le nouveau prenom : ";
             std::cin >> contacts[i].prenom;
             std::cout << "Entrer le nouveau email : ";
+             std::cin.ignore();
             std::getline(std::cin,contacts[i].email);
             std::cout << "Entrer le nouveau telephone : ";
             std::cin >> contacts[i].telephone;
@@ -145,20 +170,25 @@ void modifiercontact(Contact contacts[], int taille) {
 
     std::cout << "Aucun contact trouve avec ce nom." << std::endl;
 }
+// fonction permettant la sauvegarde du contact dans le fichier
 void sauvegarderfichier(Contact contacts[], int taille) {
+    // ouverture du fichier
     std::ofstream fichier("contacts.txt");
     if (!fichier) {
         std::cout << "Erreur lors de louverture du fichier " << std::endl;
         return;
     }
-
+// ecriture des informations du contact dans le fichier
     for (int i = 0; i < taille; i++) {
         fichier << contacts[i].nom << " "<< contacts[i].prenom << " "<< contacts[i].email << " "<< contacts[i].telephone << std::endl;
     }
     fichier.close();
     std::cout << "Contacts sauvegardes avec succes " << std::endl;
 }
+
+// fonction permettant de charger les contacts sauvegarder dans le fichier afin de les afficher
 void chargerfichier(Contact contacts[], int& taille, int capacite) {
+    // ouverture du fichier en mode lecture
     std::ifstream fichier("contacts.txt");
     if (!fichier) {
         std::cout << "Erreur lors de l'ouverture du fichier pour le chargement." << std::endl;
@@ -166,6 +196,7 @@ void chargerfichier(Contact contacts[], int& taille, int capacite) {
     }
 
     taille = 0; 
+    // chargement des informations de chaque contact du fichier
     while (fichier >> contacts[taille].nom >> contacts[taille].prenom >> contacts[taille].email >> contacts[taille].telephone) {
         taille++;
         if (taille >= capacite) {

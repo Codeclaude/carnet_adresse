@@ -4,6 +4,7 @@
   const int TAILLE_INITIALE = 100;
 
 int main(){
+  // declaration d un tableau de type Contact
   Contact contacts[TAILLE_INITIALE];
     int taille = 0;
     int capacite = TAILLE_INITIALE;
@@ -36,7 +37,7 @@ int main(){
                  chargerfichier(contacts, taille, capacite);
                break;
                 case 8:
-                  std::cout << "Au revoir !" << std::endl;
+                  std::cout << "AU REVOIR !" << std::endl;
                 break;
             default:
                 std::cout << "Option invalide. Veuillez reessayer une autre option." << std::endl;
